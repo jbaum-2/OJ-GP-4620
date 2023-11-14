@@ -1,0 +1,82 @@
+---
+title: "OJ Group Project - Stat 4620"
+author: "George Balint, Joshua Baum, Eddie Kubit, John Mahle, Mason Rocco"
+date: "2023-11-13"
+output: pdf_document
+---
+
+# SETUP:
+
+```{r}
+load("C:/Users/16143/OneDrive/Documents/School/R/OJ_Stat4620_2023.RData")
+```
+
+# Variables & Exploratory Data Analysis
+
+```{r}
+head(OJ_Stat4620)
+```
+
+```{r}
+ncol(OJ_Stat4620)
+nrow(OJ_Stat4620)
+```
+
+The OJ_Stat4620 data set includes 20 total variables with 1,070 records.  For our purposes, the Resp variable in the data will be the response and 18 of the remaing 19 variables will be used as potential predictor variables.  The first column will be omitted from our due to it representing the record number in the data set.  Before removing this column, we will verify that none of the records contain null values.
+
+```{r}
+is_na <- sapply(OJ_Stat4620, function(x) any(is.na(x)))
+is_na
+```
+
+The only variable which contains missing values is the response variable Resp.  Since this is the response variable, we will remove all records missing this value as these would significantly impact our ability to generate a predictive model.
+
+```{r}
+is_na_Resp <- is.na(OJ_Stat4620$Resp)
+sum(is_na_Resp==TRUE)
+```
+
+We will now remove these 21 rows from the data set as well as removing the first column of the data set.
+
+```{r}
+OJ_Stat4620_1 <- OJ_Stat4620[-1]
+OJ_Stat4620_f <- na.omit(OJ_Stat4620_1)
+head(OJ_Stat4620_f)
+ncol(OJ_Stat4620_f)
+nrow(OJ_Stat4620_f)
+```
+
+We are now going to examine the distribution and summary statistics for the different numerical and categorical variables.
+
+```{r}
+table(OJ_Stat4620_f$StoreID)
+table(OJ_Stat4620_f$SpecialCH)
+table(OJ_Stat4620_f$SpecialMM)
+table(OJ_Stat4620_f$Store7)
+table(OJ_Stat4620_f$STORE)
+```
+
+As can be seen by the above output, StoreID, STORE, and Store7 all are representing the same attribute in different ways. So, only one of these columns may provide use in our final predictive model with the other two being unnecessary.
+
+```{r}
+summary(OJ_Stat4620_f)
+```
+
+# Model Building & Evaluation
+
+```{r}
+# Creates a reproducible split of the data that is 50/50
+set.seed(69)
+ix <- sample(1:nrow(OJ_Stat4620_f),nrow(OJ_Stat4620_f)/2)
+OJ_Stat4620_f.train <- OJ_Stat4620_f[ix,]
+OJ_Stat4620_f.test <- OJ_Stat4620_f[-ix,]
+```
+
+
+
+
+
+
+
+
+
